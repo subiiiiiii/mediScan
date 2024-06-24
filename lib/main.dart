@@ -5,8 +5,10 @@ import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/upload_screen.dart';
 import 'screens/result_screen.dart';
+import 'package:camera/camera.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MediScanApp());
 }
 
@@ -24,7 +26,7 @@ class MediScanApp extends StatelessWidget {
         '/signup': (context) => SignupScreen(),
         '/home': (context) => HomeScreen(),
         '/upload': (context) => UploadScreen(),
-        '/result': (context) => ResultScreen(),
+        '/result': (context) => ResultScreen(success: true),
       },
     );
   }
