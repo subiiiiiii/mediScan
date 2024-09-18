@@ -6,6 +6,9 @@ import 'screens/home_screen.dart';
 import 'screens/upload_screen.dart';
 import 'screens/result_screen.dart';
 import 'screens/analytics_screen.dart';
+import 'screens/history_screen.dart'; // Import for the history screen
+import 'screens/profile_screen.dart'; // Import for the profile screen
+import 'screens/camera.dart'; // Import for the camera screen
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +31,7 @@ class MediScanApp extends StatelessWidget {
         '/signup': (context) => const SignupScreen(),
         '/home': (context) => const HomeScreen(),
         '/upload': (context) => const UploadScreen(),
-        // Update ResultScreen route to not instantiate directly
+        // ResultScreen route with arguments
         '/result': (context) {
           final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
           return ResultScreen(
@@ -37,11 +40,12 @@ class MediScanApp extends StatelessWidget {
             imageFile: args['imageFile'],
           );
         },
-        // Update AnalyticsScreen route to not instantiate directly
-        '/analytics': (context) {
-          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-          return AnalyticsScreen(imageFile: args['imageFile']);
-        },
+        // AnalyticsScreen route with arguments
+        '/analytics': (context) => const AnalyticsScreen(),
+        // Add new routes for the Profile and History screens
+        '/profile': (context) => const ProfileScreen(), // Profile screen route
+        '/history': (context) => const HistoryScreen(), // History screen route
+        '/camera': (context) => const CameraPage(), // Added route for the camera screen
       },
     );
   }

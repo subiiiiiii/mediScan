@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io'; // To handle the File object
 import 'analytics_screen.dart';
+import 'custom_drawer.dart'; // Import the custom drawer
 
 class ResultScreen extends StatelessWidget {
   final bool success;
@@ -19,13 +20,18 @@ class ResultScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scan Report'),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            // Action for the menu button, can be added later
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer(); // Open the drawer
+              },
+            );
           },
         ),
       ),
+      drawer: const CustomDrawer(), // Add the custom drawer here
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -60,7 +66,7 @@ class ResultScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            AnalyticsScreen(imageFile: imageFile),
+                            AnalyticsScreen(),
                       ),
                     );
                   },

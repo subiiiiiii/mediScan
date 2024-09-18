@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'upload_screen.dart';
+import 'custom_drawer.dart'; // Import the custom drawer
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,10 +11,14 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
-          onPressed: () {
-            // Handle menu button press
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.black),
+              onPressed: () {
+                Scaffold.of(context).openDrawer(); // Open the drawer when the menu button is pressed
+              },
+            );
           },
         ),
         title: const Row(
@@ -36,8 +41,8 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-       
       ),
+      drawer: const CustomDrawer(), // Add the custom drawer here
       body: Column(
         children: [
           Container(
@@ -81,26 +86,6 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code_scanner),
-            label: 'Scan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        selectedItemColor: Colors.teal,
-        onTap: (index) {
-          // Handle navigation here
-        },
       ),
     );
   }
