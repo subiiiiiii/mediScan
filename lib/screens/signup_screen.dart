@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
+
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
@@ -8,32 +10,32 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   String? _selectedMonth;
   String? _selectedYear;
-  TextEditingController _dayController = TextEditingController();
+  final TextEditingController _dayController = TextEditingController();
 
-  List<String> _months = [
+  final List<String> _months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
-  List<String> _years = List<String>.generate(100, (i) => (DateTime.now().year - i).toString());
+  final List<String> _years = List<String>.generate(100, (i) => (DateTime.now().year - i).toString());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(204, 222, 255, 1.0), // Background color
+      backgroundColor: const Color.fromRGBO(204, 222, 255, 1.0), // Background color
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 16.0), // Add padding to avoid overflow
+          padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add padding to avoid overflow
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 50), // Add space at the top
+              const SizedBox(height: 50), // Add space at the top
               Container(
                 width: double.infinity, // Make container take full width
-                padding: EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16.0),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black12,
                       blurRadius: 10.0,
@@ -44,7 +46,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Register',
                       style: TextStyle(
                         fontSize: 32,
@@ -52,7 +54,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         color: Color.fromRGBO(44, 58, 71, 1.0),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
@@ -65,7 +67,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
                             decoration: InputDecoration(
@@ -78,7 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextField(
                       decoration: InputDecoration(
                         labelText: 'Enter your email',
@@ -87,10 +89,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Row(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 60, // Decrease the width of the day container
                           child: TextField(
                             controller: _dayController,
@@ -103,7 +105,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             keyboardType: TextInputType.number,
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             decoration: InputDecoration(
@@ -126,7 +128,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             },
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: DropdownButtonFormField<String>(
                             decoration: InputDecoration(
@@ -151,33 +153,33 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextField(
                       decoration: InputDecoration(
                         labelText: 'Password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
-                        suffixIcon: Icon(Icons.visibility),
+                        suffixIcon: const Icon(Icons.visibility),
                       ),
                       obscureText: true,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextField(
                       decoration: InputDecoration(
                         labelText: 'Re-enter Password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
-                        suffixIcon: Icon(Icons.visibility),
+                        suffixIcon: const Icon(Icons.visibility),
                       ),
                       obscureText: true,
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(39, 147, 147, 1.0),
-                        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+                        backgroundColor: const Color.fromRGBO(39, 147, 147, 1.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -185,7 +187,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       onPressed: () {
                         Navigator.pushReplacementNamed(context, '/login');
                       },
-                      child: Text(
+                      child: const Text(
                         'Register',
                         style: TextStyle(
                           fontSize: 18,
@@ -200,7 +202,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 onPressed: () {
                   Navigator.pushNamed(context, '/login');
                 },
-                child: Text(
+                child: const Text(
                   'Already have an account? Login',
                   style: TextStyle(
                     fontSize: 16,
@@ -209,7 +211,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 50), // Add space at the bottom
+              const SizedBox(height: 50), // Add space at the bottom
             ],
           ),
         ),

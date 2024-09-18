@@ -9,6 +9,8 @@ Future<void> initializeCameras() async {
 }
 
 class CameraPage extends StatefulWidget {
+  const CameraPage({super.key});
+
   @override
   _CameraPageState createState() => _CameraPageState();
 }

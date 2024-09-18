@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'upload_screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,12 +11,12 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Colors.black),
+          icon: const Icon(Icons.menu, color: Colors.black),
           onPressed: () {
             // Handle menu button press
           },
         ),
-        title: Row(
+        title: const Row(
           children: [
             Text(
               'Hello, ',
@@ -39,7 +41,7 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            color: Color(0xFF6EC8C0),
+            color: const Color(0xFF6EC8C0),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Image.asset(
@@ -50,11 +52,11 @@ class HomeScreen extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              color: Color(0xFFE6EEFF),
+              color: const Color(0xFFE6EEFF),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
                     child: Text(
                       'Get start with testing',
                       style: TextStyle(
@@ -66,13 +68,13 @@ class HomeScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildTestOption(context, 'MRI', Icons.scanner, Color(0xFF2A4163)),
-                      _buildTestOption(context, 'CT Scan', Icons.medical_services, Color(0xFF178682)),
+                      _buildTestOption(context, 'MRI', Icons.scanner, const Color(0xFF2A4163)),
+                      _buildTestOption(context, 'CT Scan', Icons.medical_services, const Color(0xFF178682)),
                     ],
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   Center(
-                    child: _buildTestOption(context, 'Lab Reports', Icons.description, Color(0xFF4B3A71)),
+                    child: _buildTestOption(context, 'Lab Reports', Icons.description, const Color(0xFF4B3A71)),
                   ),
                 ],
               ),
@@ -108,7 +110,7 @@ class HomeScreen extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UploadScreen()),
+          MaterialPageRoute(builder: (context) => const UploadScreen()),
         );
       },
       child: Container(
@@ -122,10 +124,10 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 50.0, color: Colors.white),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18.0,
                 color: Colors.white,
               ),

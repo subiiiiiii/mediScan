@@ -5,14 +5,16 @@ import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/upload_screen.dart';
 import 'screens/result_screen.dart';
-import 'package:camera/camera.dart';
+import 'screens/analytics_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MediScanApp());
+  runApp(const MediScanApp());
 }
 
 class MediScanApp extends StatelessWidget {
+  const MediScanApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,13 +22,26 @@ class MediScanApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LetsGoScreen(),
+      home: const LetsGoScreen(),
       routes: {
-        '/login': (context) => LoginScreen(),
-        '/signup': (context) => SignupScreen(),
-        '/home': (context) => HomeScreen(),
-        '/upload': (context) => UploadScreen(),
-        '/result': (context) => ResultScreen(success: true),
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignupScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/upload': (context) => const UploadScreen(),
+        // Update ResultScreen route to not instantiate directly
+        '/result': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return ResultScreen(
+            success: args['success'],
+            ocrResult: args['ocrResult'],
+            imageFile: args['imageFile'],
+          );
+        },
+        // Update AnalyticsScreen route to not instantiate directly
+        '/analytics': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return AnalyticsScreen(imageFile: args['imageFile']);
+        },
       },
     );
   }

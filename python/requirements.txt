@@ -1,0 +1,6 @@
+Flask
+flask_cors
+easyocr
+matplotlib
+opencv-python-headless
+numpy
