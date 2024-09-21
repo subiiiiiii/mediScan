@@ -66,7 +66,7 @@ class ResultScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            AnalyticsScreen(),
+                            const AnalyticsScreen(),
                       ),
                     );
                   },

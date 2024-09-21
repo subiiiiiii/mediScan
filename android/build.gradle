@@ -1,3 +1,17 @@
+buildscript {
+    ext.kotlin_version = '1.9.0'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Add the Google Services classpath to the buildscript
+        classpath 'com.android.tools.build:gradle:8.1.1'  // Make sure this matches your Android Gradle plugin version
+        classpath 'com.google.gms:google-services:4.4.2'  // Add the Google services dependency
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0" 
+    }
+}
+
 allprojects {
     repositories {
         google()

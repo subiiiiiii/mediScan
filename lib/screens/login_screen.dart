@@ -1,18 +1,40 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void _login() async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(204, 222, 255, 1.0), // Background color
+      backgroundColor: const Color.fromRGBO(204, 222, 255, 1.0),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 100), // Add space at the top
+              const SizedBox(height: 100),
               Container(
                 width: 320,
                 padding: const EdgeInsets.all(24.0),
@@ -49,6 +71,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Enter your email',
                         border: OutlineInputBorder(
@@ -58,6 +81,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         border: OutlineInputBorder(
@@ -76,9 +100,7 @@ class LoginScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/home');
-                      },
+                      onPressed: _login,
                       child: const Text(
                         'Login',
                         style: TextStyle(
@@ -111,7 +133,7 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 100), // Add space at the bottom
+              const SizedBox(height: 100),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'screens/lets_go_screen.dart';
 import 'screens/login_screen.dart';
@@ -12,6 +13,10 @@ import 'screens/camera.dart'; // Import for the camera screen
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
   runApp(const MediScanApp());
 }
 

@@ -1,4 +1,4 @@
-package com.example.medi_scan
+package com.subi.medi_scan
 
 import io.flutter.embedding.android.FlutterActivity
 

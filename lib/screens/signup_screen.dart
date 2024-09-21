@@ -1,4 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -11,12 +14,59 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _selectedMonth;
   String? _selectedYear;
   final TextEditingController _dayController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final List<String> _months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
   final List<String> _years = List<String>.generate(100, (i) => (DateTime.now().year - i).toString());
+
+  bool _isLoading = false;
+
+  Future<void> _register() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      Navigator.pushReplacementNamed(context, '/login');
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      String message = 'An error occurred';
+      if (e.code == 'email-already-in-use') {
+        message = 'This email is already in use';
+      } else if (e.code == 'weak-password') {
+        message = 'Your password is too weak';
+      } else if (e.code == 'invalid-email') {
+        message = 'The email address is invalid';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +109,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: [
                         Expanded(
                           child: TextField(
+                            controller: _firstNameController,
                             decoration: InputDecoration(
                               labelText: 'First name',
                               border: OutlineInputBorder(
@@ -70,6 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
+                            controller: _lastNameController,
                             decoration: InputDecoration(
                               labelText: 'Last name',
                               border: OutlineInputBorder(
@@ -82,6 +134,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Enter your email',
                         border: OutlineInputBorder(
@@ -155,6 +208,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         border: OutlineInputBorder(
@@ -166,6 +220,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _confirmPasswordController,
                       decoration: InputDecoration(
                         labelText: 'Re-enter Password',
                         border: OutlineInputBorder(
@@ -184,16 +239,16 @@ class _SignupScreenState extends State<SignupScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/login');
-                      },
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
+                      onPressed: _isLoading ? null : _register,
+                      child: _isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              'Register',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ],
                 ),

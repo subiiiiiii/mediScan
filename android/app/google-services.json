@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "282257578979",
+    "project_id": "mediscan-gces",
+    "storage_bucket": "mediscan-gces.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282257578979:android:a6361e7a6b9be58c739ed6",
+        "android_client_info": {
+          "package_name": "com.subi.medi_scan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbqEoYUWZ-ngQYQ1lLFnkS8zbRWGypLp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
