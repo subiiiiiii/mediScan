@@ -1,7 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  // Function to handle user login
+  Future<void> _loginUser() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      // Handle incomplete input
+      _showErrorDialog("Please enter your email and password");
+      return;
+    }
+
+    // Create the login data object
+    final loginData = {
+      'email': _emailController.text,
+      'password': _passwordController.text,
+    };
+
+    // Send the request to the backend
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:5000/login'), // Update this to your backend URL
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(loginData),
+      );
+
+      if (response.statusCode == 200) {
+        // Success - Parse the response
+        final responseBody = jsonDecode(response.body);
+
+        // Redirect to the home screen or use any additional logic as needed
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        // Handle errors
+        final errorResponse = jsonDecode(response.body);
+        _showErrorDialog(errorResponse['message'] ?? "Error logging in");
+      }
+    } catch (e) {
+      // Handle connection errors
+      _showErrorDialog("Failed to connect to the server");
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Error"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +116,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Enter your email',
                         border: OutlineInputBorder(
@@ -58,6 +126,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         border: OutlineInputBorder(
@@ -76,9 +145,7 @@ class LoginScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/home');
-                      },
+                      onPressed: _loginUser, // Call the login function
                       child: const Text(
                         'Login',
                         style: TextStyle(

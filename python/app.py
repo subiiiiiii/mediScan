@@ -3,6 +3,7 @@ from flask_cors import CORS
 import cv2
 import easyocr
 import numpy as np
+from database import register_user, login_user  # Import your database functions
 
 app = Flask(__name__)
 CORS(app)
@@ -11,6 +12,7 @@ reader = easyocr.Reader(['en'], gpu=False)
 def merge_boxes_by_row(text_, row_threshold=10):
     rows = []
     current_row = []
+    
     for box in text_:
         if len(current_row) == 0:
             current_row.append(box)
@@ -22,8 +24,10 @@ def merge_boxes_by_row(text_, row_threshold=10):
             else:
                 rows.append(current_row)
                 current_row = [box]
+    
     if current_row:
         rows.append(current_row)
+    
     return rows
 
 @app.route('/ocr', methods=['POST'])
@@ -49,6 +53,18 @@ def ocr():
         })
 
     return jsonify(result)
+
+@app.route('/register', methods=['POST'])
+def register():
+    user_data = request.json 
+    result = register_user(user_data)
+    return jsonify(result)
+
+@app.route('/login', methods=['POST'])
+def login():
+    login_data = request.json
+    result, status_code = login_user(login_data)  # Get the result and status code separately
+    return jsonify(result), status_code  # Return the response with the status code
 
 if __name__ == '__main__':
     app.run(debug=True)

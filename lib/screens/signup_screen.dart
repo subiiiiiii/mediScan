@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -11,6 +13,11 @@ class _SignupScreenState extends State<SignupScreen> {
   String? _selectedMonth;
   String? _selectedYear;
   final TextEditingController _dayController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _rePasswordController = TextEditingController();
 
   final List<String> _months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -18,19 +25,86 @@ class _SignupScreenState extends State<SignupScreen> {
   ];
   final List<String> _years = List<String>.generate(100, (i) => (DateTime.now().year - i).toString());
 
+  // Function to handle user registration
+  Future<void> _registerUser() async {
+    if (_passwordController.text != _rePasswordController.text) {
+      // Handle password mismatch
+      _showErrorDialog("Passwords do not match");
+      return;
+    }
+
+    if (_dayController.text.isEmpty || _selectedMonth == null || _selectedYear == null) {
+      // Handle incomplete date of birth
+      _showErrorDialog("Please fill in your date of birth");
+      return;
+    }
+
+    // Create the user data object
+    final userData = {
+      'first_name': _firstNameController.text,
+      'last_name': _lastNameController.text,
+      'email': _emailController.text,
+      'password': _passwordController.text,
+      'date_of_birth': {
+        'day': _dayController.text,
+        'month': _selectedMonth,
+        'year': _selectedYear,
+      }
+    };
+
+    // Send the request to the backend
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:5000/register'),  // Updated URL to match your backend
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(userData),
+      );
+
+      if (response.statusCode == 200) {
+        // Success - Redirect to login
+        Navigator.pushReplacementNamed(context, '/login');
+      } else {
+        // Handle errors
+        final errorResponse = jsonDecode(response.body);
+        _showErrorDialog(errorResponse['message'] ?? "Error registering user");
+      }
+    } catch (e) {
+      // Handle connection errors
+      _showErrorDialog("Failed to connect to the server");
+    }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Error"),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(204, 222, 255, 1.0), // Background color
+      backgroundColor: const Color.fromRGBO(204, 222, 255, 1.0),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add padding to avoid overflow
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 50), // Add space at the top
+              const SizedBox(height: 50),
               Container(
-                width: double.infinity, // Make container take full width
+                width: double.infinity,
                 padding: const EdgeInsets.all(24.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -59,6 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       children: [
                         Expanded(
                           child: TextField(
+                            controller: _firstNameController,
                             decoration: InputDecoration(
                               labelText: 'First name',
                               border: OutlineInputBorder(
@@ -70,6 +145,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: TextField(
+                            controller: _lastNameController,
                             decoration: InputDecoration(
                               labelText: 'Last name',
                               border: OutlineInputBorder(
@@ -82,6 +158,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Enter your email',
                         border: OutlineInputBorder(
@@ -93,7 +170,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Row(
                       children: [
                         SizedBox(
-                          width: 60, // Decrease the width of the day container
+                          width: 60,
                           child: TextField(
                             controller: _dayController,
                             decoration: InputDecoration(
@@ -155,6 +232,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         border: OutlineInputBorder(
@@ -166,6 +244,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _rePasswordController,
                       decoration: InputDecoration(
                         labelText: 'Re-enter Password',
                         border: OutlineInputBorder(
@@ -184,9 +263,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, '/login');
-                      },
+                      onPressed: _registerUser,
                       child: const Text(
                         'Register',
                         style: TextStyle(
@@ -211,7 +288,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 50), // Add space at the bottom
+              const SizedBox(height: 50),
             ],
           ),
         ),

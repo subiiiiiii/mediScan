@@ -43,7 +43,7 @@ class MediScanApp extends StatelessWidget {
         // AnalyticsScreen route with arguments
         '/analytics': (context) => const AnalyticsScreen(),
         // Add new routes for the Profile and History screens
-        '/profile': (context) => const ProfileScreen(), // Profile screen route
+        '/profile': (context) => const ProfileScreen(userId: '',), // Profile screen route
         '/history': (context) => const HistoryScreen(), // History screen route
         '/camera': (context) => const CameraPage(), // Added route for the camera screen
       },

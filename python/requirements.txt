@@ -4,3 +4,5 @@ easyocr
 matplotlib
 opencv-python-headless
 numpy
+pymongo
+bcrypt
