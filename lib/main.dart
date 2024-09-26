@@ -29,7 +29,10 @@ class MediScanApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/home': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+          return HomeScreen(firstName: args['firstName']); // Pass first name to HomeScreen
+        },
         '/upload': (context) => const UploadScreen(),
         // ResultScreen route with arguments
         '/result': (context) {
@@ -43,7 +46,7 @@ class MediScanApp extends StatelessWidget {
         // AnalyticsScreen route with arguments
         '/analytics': (context) => const AnalyticsScreen(),
         // Add new routes for the Profile and History screens
-        '/profile': (context) => const ProfileScreen(userId: '',), // Profile screen route
+        '/profile': (context) => const ProfileScreen(), // Profile screen route
         '/history': (context) => const HistoryScreen(), // History screen route
         '/camera': (context) => const CameraPage(), // Added route for the camera screen
       },

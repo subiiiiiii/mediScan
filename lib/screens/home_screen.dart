@@ -3,7 +3,9 @@ import 'upload_screen.dart';
 import 'custom_drawer.dart'; // Import the custom drawer
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final String firstName; // Add this to accept the first name
+
+  const HomeScreen({super.key, required this.firstName}); // Required parameter for first name
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +23,9 @@ class HomeScreen extends StatelessWidget {
             );
           },
         ),
-        title: const Row(
+        title: Row(
           children: [
-            Text(
+            const Text(
               'Hello, ',
               style: TextStyle(
                 color: Colors.black,
@@ -32,8 +34,8 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Text(
-              'User', // This should be dynamically updated
-              style: TextStyle(
+              firstName, // Dynamically display the user's first name
+              style: const TextStyle(
                 color: Colors.teal,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -43,54 +45,46 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       drawer: const CustomDrawer(), // Add the custom drawer here
-      body: Column(
+      body: Stack(
         children: [
-          Container(
-            color: const Color(0xFF6EC8C0),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.asset(
-                'assets/images/laptop_test.png',
-                height: 150.0, // Adjusted height to fit on screen
+          // Background image with low opacity
+          Opacity(
+            opacity: 0.3, // Adjust the opacity as needed
+            child: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/laptop_test.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
-          Expanded(
-            child: Container(
-              color: const Color(0xFFE6EEFF),
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      'Get start with testing',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+          // Main content
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 16.0),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Get started with testing',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildTestOption(context, 'MRI', Icons.scanner, const Color(0xFF2A4163)),
-                      _buildTestOption(context, 'CT Scan', Icons.medical_services, const Color(0xFF178682)),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  Center(
-                    child: _buildTestOption(context, 'Lab Reports', Icons.description, const Color(0xFF4B3A71)),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Center(
+                child: _buildCameraButton(context),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTestOption(BuildContext context, String title, IconData icon, Color color) {
+  Widget _buildCameraButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -102,17 +96,17 @@ class HomeScreen extends StatelessWidget {
         width: 120.0,
         height: 120.0,
         decoration: BoxDecoration(
-          color: color,
+          color: const Color(0xFF4B3A71), // Keep the color consistent
           borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 50.0, color: Colors.white),
-            const SizedBox(height: 10.0),
+            Icon(Icons.camera_alt, size: 50.0, color: Colors.white),
+            SizedBox(height: 10.0),
             Text(
-              title,
-              style: const TextStyle(
+              'Scan',
+              style: TextStyle(
                 fontSize: 18.0,
                 color: Colors.white,
               ),

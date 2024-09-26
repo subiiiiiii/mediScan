@@ -83,9 +83,9 @@ class _UploadScreenState extends State<UploadScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => ResultScreen(
-              success: true, 
-              ocrResult: result,
-              imageFile: _image!, // Pass the image file
+              success: true,
+              ocrResult: result,  // Pass OCR result to ResultScreen
+              imageFile: _image!,  // Pass the image file to ResultScreen
             ),
           ),
         );
@@ -101,13 +101,12 @@ class _UploadScreenState extends State<UploadScreen> {
 
   Future<List<dynamic>?> _submitImageToServer(File image) async {
     try {
-      var request =
-          http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:5000/ocr'));
+      var request = http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:5000/ocr'));
       request.files.add(await http.MultipartFile.fromPath('file', image.path));
       var response = await request.send();
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
-        return jsonDecode(responseBody);
+        return jsonDecode(responseBody); // Parse and return OCR result
       } else {
         print('Error in server response: ${response.reasonPhrase}');
         return null;

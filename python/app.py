@@ -3,11 +3,19 @@ from flask_cors import CORS
 import cv2
 import easyocr
 import numpy as np
+from pymongo import MongoClient
+import gridfs
 from database import register_user, login_user  # Import your database functions
 
 app = Flask(__name__)
 CORS(app)
 reader = easyocr.Reader(['en'], gpu=False)
+
+# MongoDB setup
+client = MongoClient('mongodb://localhost:27017/')  # Update the URI if necessary
+db = client['mediScanDB']
+fs = gridfs.GridFS(db)
+ocr_collection = db['ocr_results']
 
 def merge_boxes_by_row(text_, row_threshold=10):
     rows = []
@@ -52,7 +60,31 @@ def ocr():
             "text": text
         })
 
+    # Store the image and OCR result in MongoDB
+    image_id = fs.put(file.read(), filename=file.filename, content_type=file.content_type)  # Store image in GridFS
+    ocr_data = {
+        "image_id": image_id,
+        "ocr_result": result
+    }
+    ocr_collection.insert_one(ocr_data)  # Save OCR result and image reference in the collection
+
     return jsonify(result)
+
+@app.route('/retrieve/<image_id>', methods=['GET'])
+def retrieve_image_and_text(image_id):
+    try:
+        # Retrieve the OCR result and image from the database
+        ocr_record = ocr_collection.find_one({"image_id": image_id})
+        if ocr_record:
+            image_data = fs.get(image_id).read()  # Retrieve image file from GridFS
+            return jsonify({
+                "ocr_result": ocr_record["ocr_result"],
+                "image": image_data.decode('latin1')  # You may need to encode/decode image differently
+            })
+        else:
+            return jsonify({'error': 'No data found for this image ID'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/register', methods=['POST'])
 def register():
